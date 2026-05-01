@@ -239,6 +239,7 @@ from api.mail_accounts import router as mail_accounts_router
 from api.organizations import router as organizations_router
 from api.users import router as users_router
 from api.employees import router as employees_router
+from api.attachments import router as attachments_router
 
 # Include API routers
 app.include_router(auth_router)
@@ -255,6 +256,7 @@ app.include_router(mail_accounts_router)
 app.include_router(organizations_router)
 app.include_router(users_router)
 app.include_router(employees_router, prefix="/api/v1/employees", tags=["employees"])
+app.include_router(attachments_router, prefix="/api/v1/analyze", tags=["🔬 Анализ вложений и URL"])
 
 
 # API v1 endpoints placeholder

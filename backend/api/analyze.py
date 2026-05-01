@@ -4,6 +4,7 @@ Performs technical analysis (SPF/DKIM/DMARC), URL inspection, and attachment sca
 """
 import base64
 import logging
+import os
 from datetime import datetime
 from typing import Optional, Dict, Any, List
 
@@ -88,6 +89,9 @@ async def analyze_headers(
         # but ideally it belongs in the service too.
         
         attachment_results = []
+        # Enable sandbox based on environment variable (default: disabled for performance)
+        enable_sandbox = os.getenv("ENABLE_SANDBOX_ANALYSIS", "false").lower() == "true"
+        
         if payload.raw_email:
              # Re-decode for attachments (inefficient but safe for refactor step)
              try:
@@ -104,7 +108,7 @@ async def analyze_headers(
                         content = part.get_payload(decode=True) or b""
                         if content:
                             scan = await attachment_scanner.scan_attachment(
-                                filename, content, enable_sandbox=False, enable_virustotal=True
+                                filename, content, enable_sandbox=enable_sandbox, enable_virustotal=True
                             )
                             scan["filename"] = filename
                             attachment_results.append(scan)
