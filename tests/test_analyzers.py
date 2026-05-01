@@ -263,31 +263,61 @@ class TestBehavioralAnalyzer:
     async def test_analyze_new_sender_behavior(self):
         """Should handle new sender."""
         from analyzers.behavioral_analyzer import BehavioralAnalyzer
-        from sqlalchemy.ext.asyncio import AsyncSession
-        from unittest.mock import MagicMock
+        from unittest.mock import AsyncMock, patch
+        import sys
         
-        mock_db = MagicMock(spec=AsyncSession)
-        analyzer = BehavioralAnalyzer(mock_db)
+        mock_db = AsyncMock()
         
-        result = await analyzer.analyze(from_address="never_seen@sender.com")
+        # Mock the repository - need to patch the import inside the module
+        mock_repo_instance = AsyncMock()
+        mock_repo_instance.get_daily_volumes.return_value = []  # No history
+        mock_repo_instance.count_recent_emails.return_value = 0
+        mock_repo_instance.get_sender_reputation_stats.return_value = {
+            "avg_risk": 0, "high_risk_count": 0, "total": 0
+        }
         
-        assert result is not None
-        assert "score" in result or "confidence" in result
+        # Patch at the repository module level
+        with patch('repositories.email_analysis_repo.EmailAnalysisRepository') as MockRepo:
+            MockRepo.return_value = mock_repo_instance
+            
+            analyzer = BehavioralAnalyzer(mock_db)
+            analyzer.repo = mock_repo_instance
+            
+            result = await analyzer.analyze(from_address="never_seen@sender.com")
+            
+            assert result is not None
+            assert "score" in result
 
     @pytest.mark.asyncio
     async def test_analyze_known_sender(self):
         """Should recognize known sender."""
         from analyzers.behavioral_analyzer import BehavioralAnalyzer
-        from sqlalchemy.ext.asyncio import AsyncSession
-        from unittest.mock import MagicMock
+        from unittest.mock import AsyncMock, patch
+        from datetime import datetime
         
-        mock_db = MagicMock(spec=AsyncSession)
-        analyzer = BehavioralAnalyzer(mock_db)
+        mock_db = AsyncMock()
         
-        # Known sender - should have some history
-        result = await analyzer.analyze(from_address="colleague@agency.gov.ru")
+        # Mock repository with some history
+        mock_repo_instance = AsyncMock()
+        mock_repo_instance.get_daily_volumes.return_value = [
+            (datetime(2025, 1, 1), 5),
+            (datetime(2025, 1, 2), 3),
+        ]
+        mock_repo_instance.count_recent_emails.return_value = 2
+        mock_repo_instance.get_sender_reputation_stats.return_value = {
+            "avg_risk": 25, "high_risk_count": 0, "total": 100
+        }
         
-        assert result is not None
+        with patch('repositories.email_analysis_repo.EmailAnalysisRepository') as MockRepo:
+            MockRepo.return_value = mock_repo_instance
+            
+            analyzer = BehavioralAnalyzer(mock_db)
+            analyzer.repo = mock_repo_instance
+            
+            result = await analyzer.analyze(from_address="colleague@agency.gov.ru")
+            
+            assert result is not None
+            assert "score" in result
 
 
 class TestEmailValidator:
