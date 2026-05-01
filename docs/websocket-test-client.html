@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPEAR-GUARD WebSocket Test Client</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            padding: 30px;
+        }
+
+        .panel {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .panel h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: 600;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .status {
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .status.disconnected {
+            background: #fee;
+            color: #c33;
+        }
+
+        .status.connected {
+            background: #efe;
+            color: #3c3;
+        }
+
+        .messages {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 6px;
+            height: 400px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+        }
+
+        .message {
+            margin-bottom: 10px;
+            padding: 8px;
+            border-left: 3px solid #667eea;
+            background: #2d2d2d;
+        }
+
+        .message.alert {
+            border-left-color: #f44336;
+        }
+
+        .message.info {
+            border-left-color: #2196f3;
+        }
+
+        .message.success {
+            border-left-color: #4caf50;
+        }
+
+        .timestamp {
+            color: #888;
+            font-size: 11px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            color: #888;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🛡️ SPEAR-GUARD WebSocket Test Client</h1>
+            <p>Real-time notification testing interface</p>
+        </div>
+
+        <div class="content">
+            <div class="panel">
+                <h2>Connection Settings</h2>
+
+                <div id="status" class="status disconnected">
+                    ⚫ Disconnected
+                </div>
+
+                <div class="form-group">
+                    <label for="wsUrl">WebSocket URL</label>
+                    <input type="text" id="wsUrl" value="ws://localhost:8000/ws/" placeholder="ws://localhost:8000/ws/">
+                </div>
+
+                <div class="form-group">
+                    <label for="userId">User ID</label>
+                    <input type="number" id="userId" value="1" placeholder="123">
+                </div>
+
+                <div class="form-group">
+                    <label for="token">JWT Token</label>
+                    <input type="text" id="token" placeholder="your_jwt_token_here">
+                </div>
+
+                <div class="form-group">
+                    <label for="clientType">Client Type</label>
+                    <select id="clientType">
+                        <option value="dashboard">Dashboard</option>
+                        <option value="extension">Extension</option>
+                        <option value="mobile">Mobile</option>
+                        <option value="test">Test</option>
+                    </select>
+                </div>
+
+                <button id="connectBtn" onclick="connect()">Connect</button>
+                <button id="disconnectBtn" onclick="disconnect()" disabled
+                    style="margin-top: 10px; background: #f44336;">Disconnect</button>
+
+                <div class="stats">
+                    <div class="stat-card">
+                        <div class="stat-value" id="messagesReceived">0</div>
+                        <div class="stat-label">Messages Received</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="messagesSent">0</div>
+                        <div class="stat-label">Messages Sent</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h2>Messages</h2>
+                <div id="messages" class="messages">
+                    <div class="message info">
+                        <div class="timestamp">Ready to connect...</div>
+                    </div>
+                </div>
+                <button onclick="clearMessages()" style="margin-top: 10px; background: #888;">Clear Messages</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let ws = null;
+        let messagesReceived = 0;
+        let messagesSent = 0;
+
+        function connect() {
+            const wsUrl = document.getElementById('wsUrl').value;
+            const userId = document.getElementById('userId').value;
+            const token = document.getElementById('token').value;
+            const clientType = document.getElementById('clientType').value;
+
+            if (!token) {
+                addMessage('error', 'Please enter a JWT token');
+                return;
+            }
+
+            const fullUrl = `${wsUrl}${userId}?token=${token}&client_type=${clientType}`;
+
+            addMessage('info', `Connecting to ${fullUrl}...`);
+
+            try {
+                ws = new WebSocket(fullUrl);
+
+                ws.onopen = () => {
+                    updateStatus(true);
+                    addMessage('success', '✓ Connected to WebSocket');
+                };
+
+                ws.onmessage = (event) => {
+                    messagesReceived++;
+                    updateStats();
+
+                    const data = JSON.parse(event.data);
+                    const type = data.type;
+
+                    let messageType = 'info';
+                    if (type === 'alert' || type === 'threat_alert') {
+                        messageType = 'alert';
+                    } else if (type === 'connection_established') {
+                        messageType = 'success';
+                    }
+
+                    addMessage(messageType, `[${type}] ${JSON.stringify(data, null, 2)}`);
+
+                    // Auto-respond to ping
+                    if (type === 'ping') {
+                        sendPong();
+                    }
+                };
+
+                ws.onerror = (error) => {
+                    addMessage('error', `WebSocket error: ${error.message || 'Unknown error'}`);
+                };
+
+                ws.onclose = () => {
+                    updateStatus(false);
+                    addMessage('info', 'Disconnected from WebSocket');
+                };
+
+            } catch (error) {
+                addMessage('error', `Connection failed: ${error.message}`);
+            }
+        }
+
+        function disconnect() {
+            if (ws) {
+                ws.close();
+                ws = null;
+            }
+        }
+
+        function sendPong() {
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify({ type: 'pong' }));
+                messagesSent++;
+                updateStats();
+                addMessage('info', '[SENT] pong');
+            }
+        }
+
+        function updateStatus(connected) {
+            const statusEl = document.getElementById('status');
+            const connectBtn = document.getElementById('connectBtn');
+            const disconnectBtn = document.getElementById('disconnectBtn');
+
+            if (connected) {
+                statusEl.className = 'status connected';
+                statusEl.textContent = '🟢 Connected';
+                connectBtn.disabled = true;
+                disconnectBtn.disabled = false;
+            } else {
+                statusEl.className = 'status disconnected';
+                statusEl.textContent = '⚫ Disconnected';
+                connectBtn.disabled = false;
+                disconnectBtn.disabled = true;
+            }
+        }
+
+        function addMessage(type, content) {
+            const messagesEl = document.getElementById('messages');
+            const messageEl = document.createElement('div');
+            messageEl.className = `message ${type}`;
+
+            const timestamp = new Date().toLocaleTimeString();
+            messageEl.innerHTML = `
+                <div class="timestamp">${timestamp}</div>
+                <pre style="margin-top: 5px; white-space: pre-wrap;">${content}</pre>
+            `;
+
+            messagesEl.appendChild(messageEl);
+            messagesEl.scrollTop = messagesEl.scrollHeight;
+        }
+
+        function clearMessages() {
+            document.getElementById('messages').innerHTML = '';
+            messagesReceived = 0;
+            messagesSent = 0;
+            updateStats();
+        }
+
+        function updateStats() {
+            document.getElementById('messagesReceived').textContent = messagesReceived;
+            document.getElementById('messagesSent').textContent = messagesSent;
+        }
+    </script>
+</body>
+
+</html>

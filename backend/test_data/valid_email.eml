@@ -1,0 +1,38 @@
+Return-Path: <director@ministry.gov.ru>
+Received: from mail.ministry.gov.ru (mail.ministry.gov.ru [10.0.1.15])
+	by mail.fsb.gov.ru (Postfix) with ESMTP id ABC123
+	for <security@fsb.gov.ru>; Mon, 13 Oct 2025 10:30:00 +0300 (MSK)
+Received: from workstation.ministry.local (workstation.ministry.local [192.168.1.100])
+	by mail.ministry.gov.ru (Postfix) with ESMTPSA id DEF456
+	for <security@fsb.gov.ru>; Mon, 13 Oct 2025 10:29:58 +0300 (MSK)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=ministry.gov.ru; s=default;
+	h=from:to:subject:date:message-id;
+	bh=frcCV1k9oG9oKj3dpUqdJg1PxRT2RSN/XKdLCPjaYaY=;
+	b=GKztmXkGPyLw8eHyZvHPF0XsKqFdYHlN5MvLvXd8PfPZ8v0mLqS8AxCv+K9r
+	 pZLCkLJ8EHDxPqGd7Q6fPP8YqE7dKqLpNxZvH8kQP9f6YqH7L9ZvK8mLqS8A
+	 xCv+K9rpZLCkLJ8EHDxPqGd7Q6fPP8YqE7dKqLpNxZvH8kQP9f6YqH7L9ZvK
+Authentication-Results: mail.fsb.gov.ru;
+	spf=pass smtp.mailfrom=director@ministry.gov.ru;
+	dkim=pass header.d=ministry.gov.ru;
+	dmarc=pass header.from=ministry.gov.ru
+From: Director <director@ministry.gov.ru>
+To: Security Department <security@fsb.gov.ru>
+Subject: Monthly security report
+Date: Mon, 13 Oct 2025 10:30:00 +0300
+Message-ID: <abc123def456@ministry.gov.ru>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+
+Dear colleagues,
+
+Please find attached the monthly security report for September 2025.
+
+Key highlights:
+- All systems operational
+- No security incidents detected
+- Regular updates completed on schedule
+
+Best regards,
+Director of Ministry of Digital Development

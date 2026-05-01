@@ -1,0 +1,35 @@
+Return-Path: <ceo@mega-bank.com>
+Received: from unknown-relay.example.org (unknown-relay.example.org [185.234.56.78])
+	by mail.fsb.gov.ru (Postfix) with SMTP id XYZ999
+	for <security@fsb.gov.ru>; Mon, 13 Oct 2025 14:25:00 +0300 (MSK)
+Received: from suspicious-server.darknet.ru (suspicious-server.darknet.ru [203.45.67.89])
+	by unknown-relay.example.org with SMTP id AAA111
+	for <security@fsb.gov.ru>; Mon, 13 Oct 2025 14:24:50 +0300 (MSK)
+Received: from [192.168.100.50] (unknown [45.67.89.123])
+	by suspicious-server.darknet.ru with SMTP
+	for <security@fsb.gov.ru>; Mon, 13 Oct 2025 14:24:40 +0300 (MSK)
+Authentication-Results: mail.fsb.gov.ru;
+	spf=fail smtp.mailfrom=ceo@mega-bank.com;
+	dkim=none;
+	dmarc=fail header.from=mega-bank.com
+From: CEO Mega Bank <ceo@mega-bank.com>
+Reply-To: payment-verification@offshore-services.biz
+To: Security Department <security@fsb.gov.ru>
+Subject: URGENT: Verify your account NOW!!!
+Date: Mon, 13 Oct 2025 14:25:00 +0300
+Message-ID: <random123@suspicious-server.darknet.ru>
+X-Mailer: PHP/7.2
+Content-Type: text/html; charset=utf-8
+MIME-Version: 1.0
+
+<!DOCTYPE html>
+<html>
+<body>
+<h1 style="color:red">URGENT ACTION REQUIRED!!!</h1>
+<p>Dear valued customer,</p>
+<p>We have detected suspicious activity on your account. You must verify your identity immediately to prevent account suspension.</p>
+<p><a href="http://mega-bank-verify.offshore-services.biz/login">Click here to verify now</a></p>
+<p>If you do not verify within 24 hours, your account will be permanently locked.</p>
+<p>Best regards,<br>Mega Bank Security Team</p>
+</body>
+</html>

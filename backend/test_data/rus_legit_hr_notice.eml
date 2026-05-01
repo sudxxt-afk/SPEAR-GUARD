@@ -1,0 +1,45 @@
+Return-Path: <hr@corp.local>
+Received: from mail.corp.local (mail.corp.local. [192.0.2.15])
+        by mx.target.gov.ru with ESMTPS id hr123
+        for <staff@target.gov.ru>;
+        Sat, 13 Dec 2025 08:05:02 +0300 (MSK)
+Authentication-Results: mx.target.gov.ru;
+        spf=pass smtp.mailfrom=corp.local;
+        dkim=pass header.d=corp.local header.s=mail;
+        dmarc=pass action=none header.from=corp.local
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=corp.local; s=mail;
+        h=from:to:subject:date:message-id:mime-version:content-type;
+        bh=FAKEHASH==; b=FAKELEGITDKIM==
+From: HR Отдел <hr@corp.local>
+To: staff@target.gov.ru
+Subject: Напоминание: обновление политик безопасности
+Date: Sat, 13 Dec 2025 05:05:00 +0000
+Message-ID: <20251213.0505@mail.corp.local>
+MIME-Version: 1.0
+Content-Type: multipart/alternative; boundary="HR"
+
+--HR
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+Коллеги,
+
+Напоминаем, что до 20 декабря необходимо пройти ежегодное обучение по инфо=
+безопасности и обновить пароли в корпоративных сервисах. Ссылка на курс и ин=
+струкции доступны в корпоративном портале.
+
+Спасибо,
+HR
+
+--HR
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+<html><body>
+<p>Коллеги,</p>
+<p>Напоминаем, что до <b>20 декабря</b> необходимо пройти ежегодное обучение=
+ по ИБ и обновить пароли в корпоративных сервисах.</p>
+<p>Ссылка на курс и инструкции доступны в корпоративном портале.</p>
+<p>Спасибо,<br/>HR</p>
+</body></html>
+--HR--

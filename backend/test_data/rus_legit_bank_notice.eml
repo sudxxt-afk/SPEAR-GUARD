@@ -1,0 +1,49 @@
+Return-Path: <notice@bank-secure.ru>
+Received: from mail.bank-secure.ru (mail.bank-secure.ru. [203.0.113.21])
+        by mx.target.gov.ru with ESMTPS id abcd321
+        for <treasury@target.gov.ru>;
+        Fri, 12 Dec 2025 08:00:02 +0300 (MSK)
+Authentication-Results: mx.target.gov.ru;
+        spf=pass smtp.mailfrom=bank-secure.ru;
+        dkim=pass header.d=bank-secure.ru header.s=mail;
+        dmarc=pass action=none header.from=bank-secure.ru
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bank-secure.ru; s=mail;
+        h=from:to:subject:date:message-id:mime-version:content-type;
+        bh=FAKEHASH==; b=FAKELEGITDKIM==
+From: Банк Secure <notice@bank-secure.ru>
+To: treasury@target.gov.ru
+Subject: Уведомление об обновлении тарифов на расчётно-кассовое обслуживание
+Date: Fri, 12 Dec 2025 05:00:00 +0000
+Message-ID: <20251212.0500@mail.bank-secure.ru>
+MIME-Version: 1.0
+Content-Type: multipart/alternative; boundary="BANK"
+
+--BANK
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+Здравствуйте!
+
+Сообщаем об обновлении тарифов РКО с 1 января 2026. Основные изменения:
+- пакет «Бизнес» — обслуживание 1900 ₽/мес
+- пакет «Корпорация» — безлимитные платежи, обслуживание 5900 ₽/мес
+
+Полные условия в приложении по ссылке внутри HTML-версии. Если есть вопросы =
+— ваш менеджер на связи.
+
+--BANK
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+<html><body>
+<p>Здравствуйте!</p>
+<p>Сообщаем об обновлении тарифов РКО с <b>1 января 2026</b>. Основные измен=
+ения:</p>
+<ul>
+  <li>Пакет «Бизнес» — обслуживание 1900 ₽/мес</li>
+  <li>Пакет «Корпорация» — безлимитные платежи, обслуживание 5900 ₽/мес</li>
+</ul>
+<p>Подробный прайс-лист доступен по защищенной ссылке интернет-банка.</p>
+<p>Если есть вопросы — ваш менеджер на связи.</p>
+</body></html>
+--BANK--

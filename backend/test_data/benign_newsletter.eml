@@ -1,0 +1,55 @@
+Return-Path: <news@trustedvendor.com>
+Received: from mail.trustedvendor.com (mail.trustedvendor.com. [203.0.113.12])
+        by mx.target.gov.ru with ESMTPS id abcd1234
+        for <staff@target.gov.ru>;
+        Wed, 10 Dec 2025 09:00:05 +0300 (MSK)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.trustedvendor.com (Postfix) with ESMTP id 4F1AB2CD
+        for <staff@target.gov.ru>; Wed, 10 Dec 2025 06:00:02 +0000
+Authentication-Results: mx.target.gov.ru;
+        spf=pass smtp.mailfrom=trustedvendor.com;
+        dkim=pass header.d=trustedvendor.com header.s=mail;
+        dmarc=pass action=none header.from=trustedvendor.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=trustedvendor.com; s=mail;
+        h=from:to:subject:date:message-id:mime-version:content-type;
+        bh=/x7ZavbFZz4v+N2zYJ3L7/OGTrP5JkLm2X1x4AvqL0M=; b=FAKEdkimsig==
+From: Trusted Vendor News <news@trustedvendor.com>
+To: staff@target.gov.ru
+Subject: Weekly security newsletter
+Date: Wed, 10 Dec 2025 06:00:00 +0000
+Message-ID: <20251210.0600@mail.trustedvendor.com>
+MIME-Version: 1.0
+Content-Type: multipart/related; boundary="NEWS"
+
+--NEWS
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+Hello,
+
+This week we cover MFA adoption tips, phishing trends, and a reminder to upd=
+ate VPN clients. Read the full article in the HTML version.
+
+--NEWS
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+<html><body>
+<h2>Weekly security newsletter</h2>
+<ul>
+  <li>MFA adoption tips for remote teams</li>
+  <li>Phishing trends Q4</li>
+  <li>Patch Tuesday recap</li>
+</ul>
+<p>Thanks for reading!</p>
+<img src="cid:newsletter-banner" alt="Security banner" />
+</body></html>
+--NEWS
+Content-Type: image/png; name="banner.png"
+Content-Transfer-Encoding: base64
+Content-ID: <newsletter-banner>
+Content-Disposition: inline; filename="banner.png"
+
+iVBORw0KGgoAAAANSUhEUgAAAA4AAAAGCAYAAAAScQYVAAAAHklEQVQYV2P8////fwYiAAvzqQ0j
+UCBjYBpgmBkYBgAQhgMfFq3c2wAAAABJRU5ErkJggg==
+--NEWS--

@@ -1,0 +1,79 @@
+Return-Path: <phishing@evil-server.biz>
+Received: from evil-server.biz (evil-server.biz [198.51.100.42])
+	by mail.fsb.gov.ru (Postfix) with SMTP id BAD999
+	for <admin@fsb.gov.ru>; Mon, 13 Oct 2025 16:45:00 +0300 (MSK)
+Received: from spam-relay.darknet.com (spam-relay.darknet.com [203.0.113.99])
+	by evil-server.biz with SMTP
+	for <admin@fsb.gov.ru>; Mon, 13 Oct 2025 16:44:50 +0300 (MSK)
+Received: from [10.10.10.50] (unknown [45.123.234.56])
+	by spam-relay.darknet.com
+	for <admin@fsb.gov.ru>; Mon, 13 Oct 2025 16:44:40 +0300 (MSK)
+Received: from [172.16.0.100] (unknown [89.234.56.78])
+	by intermediate-relay.net
+	for <admin@fsb.gov.ru>; Mon, 13 Oct 2025 16:44:30 +0300 (MSK)
+Received: from [192.168.1.200] (unknown [123.45.67.89])
+	by another-relay.org
+	for <admin@fsb.gov.ru>; Mon, 13 Oct 2025 16:44:20 +0300 (MSK)
+Authentication-Results: mail.fsb.gov.ru;
+	spf=fail smtp.mailfrom=phishing@evil-server.biz;
+	dkim=none;
+	dmarc=none
+From: Security Ministry.gov.ru <phishing@evil-server.biz>
+Reply-To: urgent-verification@goverment-portal.ru
+To: Administrator <admin@fsb.gov.ru>
+Subject: =?UTF-8?B?0KHQoNCe0KfQndCeISDQn9Ce0JTQotCS0JXQoNCU0JjQotCVINCf0JDQoNC+0JvQrCEgSU1QT1JUQU5UISEh?=
+Date: Mon, 13 Oct 2025 16:45:00 +0300
+Message-ID: <fake789@evil-server.biz>
+X-Mailer: Spambot Pro 3.0
+X-Priority: 1
+X-MSMail-Priority: High
+Importance: High
+Content-Type: text/html; charset=utf-8
+MIME-Version: 1.0
+
+<!DOCTYPE html>
+<html>
+<body style="font-family: Arial, sans-serif;">
+<div style="background-color: #cc0000; color: white; padding: 20px; text-align: center;">
+<h1>⚠️ СРОЧНОЕ ОПОВЕЩЕНИЕ БЕЗОПАСНОСТИ ⚠️</h1>
+</div>
+
+<div style="padding: 20px; background-color: #fff3cd; border: 2px solid #ff0000; margin: 20px;">
+<h2 style="color: #cc0000;">ВНИМАНИЕ! ТРЕБУЕТСЯ НЕМЕДЛЕННОЕ ДЕЙСТВИЕ!</h2>
+
+<p>Уважаемый администратор,</p>
+
+<p style="font-size: 16px; font-weight: bold;">
+В вашей системе обнаружена КРИТИЧЕСКАЯ УЯЗВИМОСТЬ безопасности!
+</p>
+
+<p>Вы должны НЕМЕДЛЕННО подтвердить свои учетные данные для предотвращения несанкционированного доступа.</p>
+
+<div style="text-align: center; margin: 30px;">
+<a href="http://goverment-portal.ru.evil-server.biz/verify-credentials"
+   style="background-color: #cc0000; color: white; padding: 15px 30px; text-decoration: none; font-size: 18px; font-weight: bold; border-radius: 5px;">
+   ПОДТВЕРДИТЬ ПАРОЛЬ СЕЙЧАС
+</a>
+</div>
+
+<p style="color: #cc0000; font-weight: bold;">
+⏰ У вас есть только 2 ЧАСА до блокировки системы!
+</p>
+
+<p style="font-size: 12px; color: #666;">
+Если вы не подтвердите свои данные в течение 2 часов, все системы будут автоматически заблокированы в целях безопасности.
+</p>
+
+<hr>
+
+<p style="font-size: 11px; color: #999;">
+Отдел Безопасности | Министерство Цифрового Развития<br>
+support@ministry.gov.ru | Круглосуточная горячая линия: 8-800-XXX-XXXX
+</p>
+</div>
+
+<div style="padding: 10px; background-color: #f0f0f0; text-align: center; font-size: 10px; color: #666;">
+Это автоматическое сообщение. Пожалуйста, не отвечайте на него.
+</div>
+</body>
+</html>

@@ -1,0 +1,50 @@
+Return-Path: <ceo@contoso-mail.com>
+Received: from mail.contoso-mail.com (mail.contoso-mail.com. [198.51.100.25])
+        by mx.target.gov.ru with ESMTPS id d1234abc
+        for <finance@target.gov.ru>;
+        Tue, 09 Dec 2025 10:12:45 +0300 (MSK)
+Received: from [10.0.0.42] (unknown [10.0.0.42])
+        by mail.contoso-mail.com (Postfix) with ESMTPSA id 1234ABCD
+        for <finance@target.gov.ru>; Tue, 09 Dec 2025 10:12:43 +0300 (MSK)
+Authentication-Results: mx.target.gov.ru;
+        spf=softfail (sender IP 10.0.0.42 is not permitted) smtp.mailfrom=contoso-mail.com;
+        dkim=fail (body hash mismatch) header.d=contoso-mail.com;
+        dmarc=fail action=quarantine header.from=contoso-mail.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=contoso-mail.com; s=default;
+        h=from:to:subject:date:message-id:mime-version:content-type;
+        bh=E+6iQm0b7QH5MEXAMPLEHASH/==; b=Wq9zFAKEsig==
+From: "Mark Taylor (CEO)" <ceo@contoso-mail.com>
+To: finance@target.gov.ru
+Subject: Urgent wire transfer for supplier INV-9843
+Date: Tue, 09 Dec 2025 10:12:40 +0300
+Message-ID: <20251209.1012.12345@mail.contoso-mail.com>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="BOUNDARY"
+
+--BOUNDARY
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+Team,
+
+I need a same-day wire for supplier INV-9843. Please send EUR 48,500 to the=
+ beneficiary below and email me confirmation by 14:00.
+
+Beneficiary: Global Freight Ltd
+IBAN: DE02120300000000202020
+BIC: BYLADEM1001
+Reference: INV-9843 urgent
+
+I am boarding now so I will be offline. Make this a priority.
+
+Mark
+
+--BOUNDARY
+Content-Type: application/pdf; name="invoice_9843.pdf"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="invoice_9843.pdf"
+
+JVBERi0xLjQKJcTl8uXrp/Og0MTGCjEgMCBvYmoKPDwvVHlwZS9DYXRhbG9nL1BhZ2VzIDIgMCBS
+L0xhbmcgKEVuLVVTKS9TdHJ1Y3RQYXJlbnRzIDMgMCBSL01hcmtJbmZvPDwvTWFya2VkIHRydWU+
+Pj4+CmVuZG9iago=
+--BOUNDARY--

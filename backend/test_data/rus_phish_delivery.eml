@@ -1,0 +1,39 @@
+Return-Path: <support@dhl-tracking-ru.com>
+Received: from mx.dhl-tracking-ru.com (mx.dhl-tracking-ru.com. [203.0.113.77])
+        by mx.target.gov.ru with ESMTPS id del987
+        for <user@target.gov.ru>;
+        Sat, 13 Dec 2025 07:41:22 +0300 (MSK)
+Authentication-Results: mx.target.gov.ru;
+        spf=fail (sender IP 203.0.113.77 not permitted) smtp.mailfrom=dhl-tracking-ru.com;
+        dkim=none (no signature);
+        dmarc=fail action=reject header.from=dhl-tracking-ru.com
+From: DHL Отслеживание <support@dhl-tracking-ru.com>
+Reply-To: DHL Отслеживание <reply@dhl-tracking-ru.com>
+To: user@target.gov.ru
+Subject: Требуется действие: подтвердите доставку посылки
+Date: Sat, 13 Dec 2025 04:41:18 +0000
+Message-ID: <20251213.0441@mail.dhl-tracking-ru.com>
+MIME-Version: 1.0
+Content-Type: multipart/alternative; boundary="PHISH"
+
+--PHISH
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+Ваша посылка не может быть доставлена из-за неполного адреса. Подтвердите оп=
+лату доставки по ссылке: https://dhl-tracking-ru.com/confirm
+
+Если не подтвердите в течение 60 минут, посылка будет возвращена отправителю.
+
+--PHISH
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+<html><body>
+<p><b>Действие требуется</b>: для доставки посылки нужно подтвердить адрес и=
+ оплату.</p>
+<p><a href="https://dhl-tracking-ru.com/confirm?id=99271">Подтвердить достав=
+ку</a></p>
+<p>Код отслеживания: <span style="color:#c00">RU-66821</span></p>
+</body></html>
+--PHISH--

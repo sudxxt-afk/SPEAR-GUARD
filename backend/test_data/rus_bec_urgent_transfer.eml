@@ -1,0 +1,39 @@
+Return-Path: <ceo@eu-contoso.com>
+Received: from mail.eu-contoso.com (mail.eu-contoso.com. [198.51.100.42])
+        by mx.target.gov.ru with ESMTPS id bec123
+        for <finance@target.gov.ru>;
+        Fri, 12 Dec 2025 09:14:12 +0300 (MSK)
+Authentication-Results: mx.target.gov.ru;
+        spf=softfail (sender IP 198.51.100.42 not permitted) smtp.mailfrom=eu-contoso.com;
+        dkim=none (no signature);
+        dmarc=fail action=quarantine header.from=eu-contoso.com
+From: "Марк Тейлор" <ceo@eu-contoso.com>
+To: finance@target.gov.ru
+Subject: Срочно: оплатить счёт сегодня
+Date: Fri, 12 Dec 2025 09:14:05 +0300
+Message-ID: <20251212.0914@mail.eu-contoso.com>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="BOUNDARY"
+
+--BOUNDARY
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+Доброе утро.
+
+Нужно сегодня до 15:00 оплатить счет поставщику. Сумма 52 300 EUR, реквизиты=
+ в приложении. Очень важно провести без задержек. После отправки пришлите SW=
+IFT в ответ.
+
+Спасибо,
+Марк
+
+--BOUNDARY
+Content-Type: application/pdf; name="invoice_52300.pdf"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="invoice_52300.pdf"
+
+JVBERi0xLjQKJcTl8uXrp/Og0MTGCjEgMCBvYmoKPDwvVHlwZS9DYXRhbG9nL1BhZ2VzIDIgMCBS
+L0xhbmcgKEVuLVVTKS9TdHJ1Y3RQYXJlbnRzIDMgMCBSL01hcmtJbmZvPDwvTWFya2VkIHRydWU+
+Pj4+CmVuZG9iago=
+--BOUNDARY--

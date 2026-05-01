@@ -1,0 +1,279 @@
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: spearguard-postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-spearguard}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - spearguard-network
+
+  # Redis Cache & Message Broker
+  redis:
+    image: redis:7-alpine
+    container_name: spearguard-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - spearguard-network
+
+  # Elasticsearch for full-text search
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.10.0
+    container_name: spearguard-elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -f http://localhost:9200/_cluster/health || exit 1" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    networks:
+      - spearguard-network
+
+  # FastAPI Backend
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: spearguard-backend
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/${POSTGRES_DB:-spearguard}
+      - REDIS_URL=redis://redis:6379/0
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
+      - SECRET_KEY=${SECRET_KEY:-dev-secret-key-change-in-production}
+      - ENVIRONMENT=${ENVIRONMENT:-development}
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - IMAP_HOST=${IMAP_HOST:-imap.gmail.com}
+      - IMAP_PORT=${IMAP_PORT:-993}
+      - IMAP_USER=${IMAP_USER}
+      - IMAP_PASSWORD=${IMAP_PASSWORD}
+      - IMAP_USE_SSL=${IMAP_USE_SSL:-true}
+      - API_SYSTEM_TOKEN=${API_SYSTEM_TOKEN}
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+    networks:
+      - spearguard-network
+
+  # Celery Worker
+  celery-worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: spearguard-celery-worker
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/${POSTGRES_DB:-spearguard}
+      - REDIS_URL=redis://redis:6379/0
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
+      - SECRET_KEY=${SECRET_KEY:-dev-secret-key-change-in-production}
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+    volumes:
+      - ./backend:/app
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command: celery -A config.celery_config.celery_app worker --loglevel=info --concurrency=4
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "python - <<'PY'
+
+            import redis, os
+
+            r = redis.Redis.from_url(os.getenv('REDIS_URL', 'redis://redis:6379/0'))
+
+            r.ping()
+
+            PY"
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    networks:
+      - spearguard-network
+
+  # Celery Beat Scheduler
+  celery-beat:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: spearguard-celery-beat
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/${POSTGRES_DB:-spearguard}
+      - REDIS_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    volumes:
+      - ./backend:/app
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command: celery -A config.celery_config.celery_app beat --loglevel=info
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "python - <<'PY'
+
+            import redis, os
+
+            r = redis.Redis.from_url(os.getenv('REDIS_URL', 'redis://redis:6379/0'))
+
+            r.ping()
+
+            PY"
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    networks:
+      - spearguard-network
+
+  # Flower - Celery monitoring tool
+  flower:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: spearguard-flower
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    ports:
+      - "5555:5555"
+    volumes:
+      - ./backend:/app
+    depends_on:
+      redis:
+        condition: service_healthy
+    command: celery -A config.celery_config.celery_app flower --port=5555
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "python - <<'PY'
+
+            import redis, os
+
+            r = redis.Redis.from_url(os.getenv('REDIS_URL', 'redis://redis:6379/0'))
+
+            r.ping()
+
+            PY"
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    networks:
+      - spearguard-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: spearguard-frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      backend:
+        condition: service_started
+    networks:
+      - spearguard-network
+  # DEPRECATED: Standalone IMAP Listener - replaced by Celery per-user sync tasks
+  # Each user now connects their own mail accounts via the UI, and Celery workers
+  # sync them individually. See tasks/mail_sync.py
+  #
+  # imap-listener:
+  #   build:
+  #     context: ./backend
+  #     dockerfile: Dockerfile
+  #   container_name: spearguard-imap-listener
+  #   environment:
+  #     - IMAP_HOST=${IMAP_HOST:-imap.gmail.com}
+  #     - IMAP_PORT=${IMAP_PORT:-993}
+  #     - IMAP_USER=${IMAP_USER}
+  #     - IMAP_PASSWORD=${IMAP_PASSWORD}
+  #     - IMAP_FOLDER=${IMAP_FOLDER:-INBOX}
+  #     - IMAP_POLL_INTERVAL=${IMAP_POLL_INTERVAL:-60}
+  #     - IMAP_USE_SSL=${IMAP_USE_SSL:-true}
+  #     - BACKEND_URL=http://backend:8000
+  #     - API_SYSTEM_TOKEN=${API_SYSTEM_TOKEN}
+  #   depends_on:
+  #     backend:
+  #       condition: service_started
+  #   command: python -m integrations.imap_listener
+  #   restart: unless-stopped
+  #   networks:
+  #     - spearguard-network
+
+  # DEPRECATED: SMTP Listener - No longer used, only IMAP via Celery
+  # smtp-listener:
+  #   build:
+  #     context: ./backend
+  #     dockerfile: Dockerfile
+  #   container_name: spearguard-smtp-listener
+  #   environment:
+  #     - BACKEND_URL=http://backend:8000
+  #     - API_SYSTEM_TOKEN=${API_SYSTEM_TOKEN}
+  #   ports:
+  #     - "${SMTP_LISTENER_PORT:-2525}:2525"
+  #   depends_on:
+  #     backend:
+  #       condition: service_started
+  #   command: python -m integrations.smtp_listener --port 2525 --backend-url http://backend:8000 --api-token ${API_SYSTEM_TOKEN}
+  #   restart: unless-stopped
+  #   networks:
+  #     - spearguard-network
+
+networks:
+  spearguard-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  redis_data:
+  elasticsearch_data:
