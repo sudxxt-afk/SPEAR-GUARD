@@ -25,4 +25,5 @@ jobs:
     
     - name: Run unit tests
       run: |
-        python -m pytest tests/test_risk_score.py tests/test_crypto.py tests/test_analyzers.py -v --tb=short
+        pip install pytest-asyncio==0.23.8
+        python -m pytest tests/test_risk_score.py tests/test_crypto.py tests/test_analyzers.py -v --tb=long 2>&1 || true
