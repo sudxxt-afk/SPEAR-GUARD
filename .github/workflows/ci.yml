@@ -26,4 +26,4 @@ jobs:
       run: |
         python --version
         pip list | grep -E "pytest|asyncio|sqlalchemy|passlib"
-        python -m pytest tests/test_risk_score.py tests/test_crypto.py tests/test_analyzers.py -v --tb=short 2>&1 || true
+        python -m pytest tests/test_risk_score.py tests/test_crypto.py tests/test_analyzers.py -v
