@@ -94,6 +94,12 @@ Thumbs.db
 *.md
 !README.md
 
+# Text files
+*.txt
+
+# HTML in root (not docs)
+index.html
+
 # Machine Learning Models
 *.pkl
 *.h5
