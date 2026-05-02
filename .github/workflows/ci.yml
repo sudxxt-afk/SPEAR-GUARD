@@ -20,11 +20,9 @@ jobs:
     
     - name: Install dependencies
       run: |
-        pip install -r backend/requirements.txt
+        pip install pytest pytest-asyncio==0.23.8 aiosqlite passlib[bcrypt] cryptography email-validator sqlalchemy
     
     - name: Run tests
       run: |
-        python --version
-        pip list | grep -E "pytest|asyncio|sqlalchemy|passlib"
-        python -c "import sys; print('Python path:', sys.path)"
-        python -m pytest tests/test_risk_score.py tests/test_crypto.py tests/test_analyzers.py -v --tb=long --capture=no 2>&1 | head -200
+        python --version && pip list | grep -E "pytest|asyncio|sqlalchemy|passlib"
+        python -m pytest tests/test_risk_score.py tests/test_crypto.py tests/test_analyzers.py -v 2>&1
