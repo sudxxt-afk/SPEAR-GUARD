@@ -25,4 +25,5 @@ jobs:
     
     - name: Run unit tests
       run: |
+        export PYTHONPATH="$PWD/backend:$PWD"
         python -m pytest tests/test_risk_score.py tests/test_crypto.py tests/test_analyzers.py -v --tb=short
