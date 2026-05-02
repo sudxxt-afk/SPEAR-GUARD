@@ -21,9 +21,8 @@ jobs:
     
     - name: Install dependencies
       run: |
-        cd backend && pip install -r requirements.txt
+        pip install -r backend/requirements.txt
     
     - name: Run unit tests
       run: |
-        export PYTHONPATH="$GITHUB_WORKSPACE/backend:$GITHUB_WORKSPACE"
-        cd tests && python -m pytest test_risk_score.py test_crypto.py test_analyzers.py -v --tb=short
+        python -m pytest tests/test_risk_score.py tests/test_crypto.py tests/test_analyzers.py -v --tb=short
