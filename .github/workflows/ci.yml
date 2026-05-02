@@ -17,13 +17,12 @@ jobs:
       uses: actions/setup-python@v5
       with:
         python-version: '3.12'
-        cache: 'pip'
     
-    - name: Install dependencies
+    - name: Install test dependencies
       run: |
-        pip install -r backend/requirements.txt
+        pip install pytest pytest-asyncio aiosqlite
+        pip install -r backend/requirements.txt --no-deps
     
-    - name: Run unit tests
+    - name: Run tests
       run: |
-        pip install pytest-asyncio==0.23.8
-        python -m pytest tests/test_risk_score.py tests/test_crypto.py tests/test_analyzers.py -v --tb=long 2>&1 || true
+        python -m pytest tests/test_risk_score.py tests/test_crypto.py tests/test_analyzers.py -v
