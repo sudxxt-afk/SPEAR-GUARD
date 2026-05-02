@@ -18,11 +18,10 @@ jobs:
       with:
         python-version: '3.12'
     
-    - name: Install test dependencies
+    - name: Install dependencies
       run: |
-        pip install pytest pytest-asyncio aiosqlite
-        pip install -r backend/requirements.txt --no-deps
+        pip install -r backend/requirements.txt
     
     - name: Run tests
       run: |
-        python -m pytest tests/test_risk_score.py tests/test_crypto.py tests/test_analyzers.py -v
+        python -m pytest tests/ -v --tb=short 2>&1
