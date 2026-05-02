@@ -760,3 +760,145 @@ export const employeesApi = {
     return apiRequest<EmployeeStats>(`/api/v1/employees/${userId}/stats`);
   },
 };
+
+// =============================================================================
+// FORENSIC INVESTIGATION API
+// =============================================================================
+
+export interface ForensicTimelineItem {
+  id: number;
+  message_id: string;
+  from: string;
+  to: string;
+  subject: string;
+  risk_score: number;
+  status: string;
+  technical_score: number;
+  linguistic_score: number;
+  behavioral_score: number;
+  contextual_score: number;
+  in_registry: boolean;
+  trust_level: number;
+  analyzed_at: string | null;
+}
+
+export interface ForensicStatistics {
+  total_emails: number;
+  high_risk: number;
+  medium_risk: number;
+  safe: number;
+  unique_recipients: number;
+  first_seen: string | null;
+  last_seen: string | null;
+}
+
+export interface ForensicTimeline {
+  sender: string;
+  timeline: ForensicTimelineItem[];
+  statistics: ForensicStatistics;
+}
+
+export interface RecipientNetworkNode {
+  email: string;
+  emails_received: number;
+  average_risk_score: number;
+  high_risk_count: number;
+  first_contact: string | null;
+  last_contact: string | null;
+  user_name?: string;
+  department?: string;
+}
+
+export interface RecipientNetwork {
+  sender: string;
+  total_recipients: number;
+  network: RecipientNetworkNode[];
+  high_risk_recipients: RecipientNetworkNode[];
+}
+
+export interface ForensicEmailDetails {
+  email: {
+    id: number;
+    message_id: string;
+    from: string;
+    to: string;
+    subject: string;
+    body_preview: string;
+    risk_score: number;
+    status: string;
+    in_registry: boolean;
+    trust_level: number;
+    technical_score: number;
+    linguistic_score: number;
+    behavioral_score: number;
+    contextual_score: number;
+    analysis_details: any;
+    body_text: string;
+    raw_headers: string;
+    analyzed_at: string | null;
+  };
+  alerts: Array<{
+    id: number;
+    alert_type: string;
+    severity: string;
+    title: string;
+    description: string;
+    status: string;
+    created_at: string | null;
+  }>;
+  registry_info: {
+    is_registered: boolean;
+    organization_name: string | null;
+    trust_level: number | null;
+    is_verified: boolean | null;
+  };
+}
+
+export interface ForensicReport {
+  report_type: string;
+  generated_at: string;
+  investigator: string;
+  target_sender: string;
+  time_range: string;
+  summary: {
+    total_emails: number;
+    high_risk_count: number;
+    medium_risk_count: number;
+    safe_count: number;
+    unique_recipients: number;
+  };
+  timeline: Array<{
+    date: string | null;
+    to: string;
+    subject: string;
+    risk_score: number;
+    status: string;
+  }>;
+  recommendations: Array<{
+    severity: string;
+    title: string;
+    description: string;
+  }>;
+}
+
+export const forensicApi = {
+  async getSenderTimeline(senderEmail: string, daysBack: number = 365): Promise<ForensicTimeline> {
+    return apiRequest<ForensicTimeline>(`/api/v1/forensic/sender-timeline?sender_email=${encodeURIComponent(senderEmail)}&days_back=${daysBack}`);
+  },
+
+  async getRecipientNetwork(senderEmail: string): Promise<RecipientNetwork> {
+    return apiRequest<RecipientNetwork>(`/api/v1/forensic/recipient-network?sender_email=${encodeURIComponent(senderEmail)}`);
+  },
+
+  async getEmailDetails(emailId: number): Promise<ForensicEmailDetails> {
+    return apiRequest<ForensicEmailDetails>(`/api/v1/forensic/email-details/${emailId}`);
+  },
+
+  async exportReport(senderEmail: string, format: 'json' | 'pdf' = 'json', daysBack: number = 365): Promise<ForensicReport> {
+    return apiRequest<ForensicReport>(`/api/v1/forensic/export-report?sender_email=${encodeURIComponent(senderEmail)}&format=${format}&days_back=${daysBack}`);
+  },
+
+  async getIncidentTimeline(analysisId: number): Promise<any> {
+    return apiRequest<any>(`/api/v1/forensic/incident-timeline/${analysisId}`);
+  },
+};

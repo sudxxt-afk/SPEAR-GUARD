@@ -5,6 +5,9 @@ import { analysisApi, alertsApi } from '../services/api';
 import { ArrowLeft, AlertCircle, CheckCircle, XCircle, Shield, Mail, Paperclip, Link2, FileText, Clock, AlertTriangle, ShieldCheck, ShieldX, ShieldAlert, MonitorPlay } from 'lucide-react';
 import type { EmailAnalysis, Alert } from '../types';
 import { EmailSimulator } from '../components/EmailSimulator';
+import { ForensicTimelineComponent } from '../components/ForensicTimeline';
+import { ConnectionGraph } from '../components/ConnectionGraph';
+import { forensicApi, ForensicEmailDetails } from '../services/api';
 
 export const AnalysisDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -13,6 +16,9 @@ export const AnalysisDetail: React.FC = () => {
   const [relatedAlerts, setRelatedAlerts] = useState<Alert[]>([]);
   const [loading, setLoading] = useState(true);
   const [showSimulator, setShowSimulator] = useState(false);
+  const [activeForensicTab, setActiveForensicTab] = useState<'timeline' | 'network'>('timeline');
+  const [forensicDetails, setForensicDetails] = useState<ForensicEmailDetails | null>(null);
+  const [showForensicPanel, setShowForensicPanel] = useState(false);
 
   useEffect(() => {
     const loadData = async () => {
@@ -435,6 +441,129 @@ export const AnalysisDetail: React.FC = () => {
               </div>
             )}
           </div>
+
+          {/* Forensic Investigation */}
+          {analysis && (
+            <div className="glass-card rounded-3xl p-8">
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-4">
+                  <div className="p-3 bg-cyan-500/10 rounded-2xl">
+                    <Shield className="w-6 h-6 text-cyan-400" />
+                  </div>
+                  <h3 className="text-xl font-black text-white">Форензика</h3>
+                </div>
+                <button
+                  onClick={() => {
+                    console.log('Analysis:', analysis);
+                    console.log('Sender email:', analysis.sender_email);
+                    setShowForensicPanel(!showForensicPanel);
+                  }}
+                  className="px-4 py-2 bg-cyan-500/20 text-cyan-400 rounded-xl border border-cyan-500/30 hover:bg-cyan-500/30 transition-colors text-sm font-medium"
+                >
+                  {showForensicPanel ? 'Скрыть' : 'Расследовать'}
+                </button>
+              </div>
+
+              {showForensicPanel && (analysis.sender_email || analysis.from_address) && (
+                <div className="space-y-6">
+                  {/* Tabs */}
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => setActiveForensicTab('timeline')}
+                      className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                        activeForensicTab === 'timeline'
+                          ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30'
+                          : 'bg-slate-800/50 text-gray-400 border border-slate-700 hover:bg-slate-700'
+                      }`}
+                    >
+                      Timeline отправителя
+                    </button>
+                    <button
+                      onClick={() => setActiveForensicTab('network')}
+                      className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                        activeForensicTab === 'network'
+                          ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30'
+                          : 'bg-slate-800/50 text-gray-400 border border-slate-700 hover:bg-slate-700'
+                      }`}
+                    >
+                      Сеть получателей
+                    </button>
+                  </div>
+
+                  {/* Tab Content */}
+                  <div className="mt-6">
+                    {activeForensicTab === 'timeline' ? (
+                      <ForensicTimelineComponent 
+                        senderEmail={analysis.sender_email || (analysis as any).from_address || 'unknown@example.com'} 
+                        onSelectEmail={async (emailId) => {
+                          try {
+                            const details = await forensicApi.getEmailDetails(emailId);
+                            setForensicDetails(details);
+                          } catch (err) {
+                            console.error('Failed to load forensic details:', err);
+                          }
+                        }}
+                      />
+                    ) : (
+                      <ConnectionGraph 
+                        senderEmail={analysis.sender_email || (analysis as any).from_address || 'unknown@example.com'}
+                        onSelectRecipient={(email) => console.log('Selected:', email)}
+                      />
+                    )}
+                  </div>
+
+                  {/* Forensic Details Modal */}
+                  {forensicDetails && (
+                    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+                      <div className="bg-slate-900 rounded-2xl p-6 max-w-2xl w-full max-h-[80vh] overflow-auto border border-slate-700">
+                        <div className="flex items-center justify-between mb-4">
+                          <h4 className="text-lg font-bold text-white">Детали письма</h4>
+                          <button 
+                            onClick={() => setForensicDetails(null)}
+                            className="text-gray-400 hover:text-white"
+                          >
+                            ✕
+                          </button>
+                        </div>
+                        
+                        <div className="space-y-4">
+                          <div className="grid grid-cols-2 gap-4">
+                            <div>
+                              <div className="text-xs text-gray-500">Риск</div>
+                              <div className="text-xl font-bold text-white">{forensicDetails.email.risk_score}%</div>
+                            </div>
+                            <div>
+                              <div className="text-xs text-gray-500">В реестре</div>
+                              <div className="text-white">
+                                {forensicDetails.registry_info.is_registered 
+                                  ? `✓ ${forensicDetails.registry_info.organization_name}`
+                                  : '✗ Неизвестный'}
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <div className="text-sm text-gray-400">
+                            {forensicDetails.email.body_text?.substring(0, 500)}...
+                          </div>
+                          
+                          {forensicDetails.alerts.length > 0 && (
+                            <div>
+                              <div className="text-sm font-medium text-gray-400 mb-2">Алерты:</div>
+                              {forensicDetails.alerts.map(alert => (
+                                <div key={alert.id} className="p-2 bg-red-500/10 rounded text-sm">
+                                  <span className="text-red-400">{alert.title}</span>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </Layout >

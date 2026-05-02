@@ -16,8 +16,7 @@ async def seed_data():
                     email="admin@spear-guard.gov.ru",
                     full_name="Администратор Безопасности",
                     hashed_password=get_password_hash("admin123"),
-                    role="security_officer",
-                    organization="ГКИБ",
+                    role="admin",
                     department="Департамент анализа угроз"
                 )
                 session.add(admin)

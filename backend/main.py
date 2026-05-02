@@ -240,6 +240,7 @@ from api.organizations import router as organizations_router
 from api.users import router as users_router
 from api.employees import router as employees_router
 from api.attachments import router as attachments_router
+from api.forensic import router as forensic_router
 
 # Include API routers
 app.include_router(auth_router)
@@ -257,6 +258,7 @@ app.include_router(organizations_router)
 app.include_router(users_router)
 app.include_router(employees_router, prefix="/api/v1/employees", tags=["employees"])
 app.include_router(attachments_router, prefix="/api/v1/analyze", tags=["🔬 Анализ вложений и URL"])
+app.include_router(forensic_router, prefix="/api/v1/forensic", tags=["🔍 Forensic Investigation"])
 
 
 # API v1 endpoints placeholder
