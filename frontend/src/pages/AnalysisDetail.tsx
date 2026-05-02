@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { Layout } from '../components/Layout';
 import { analysisApi, alertsApi } from '../services/api';
 import { ArrowLeft, AlertCircle, CheckCircle, XCircle, Shield, Mail, Paperclip, Link2, FileText, Clock, AlertTriangle, ShieldCheck, ShieldX, ShieldAlert, MonitorPlay } from 'lucide-react';
@@ -12,6 +12,7 @@ import { forensicApi, ForensicEmailDetails } from '../services/api';
 export const AnalysisDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [analysis, setAnalysis] = useState<EmailAnalysis | null>(null);
   const [relatedAlerts, setRelatedAlerts] = useState<Alert[]>([]);
   const [loading, setLoading] = useState(true);
@@ -19,6 +20,13 @@ export const AnalysisDetail: React.FC = () => {
   const [activeForensicTab, setActiveForensicTab] = useState<'timeline' | 'network'>('timeline');
   const [forensicDetails, setForensicDetails] = useState<ForensicEmailDetails | null>(null);
   const [showForensicPanel, setShowForensicPanel] = useState(false);
+
+  // Auto-open forensic panel if ?forensic=true
+  useEffect(() => {
+    if (searchParams.get('forensic') === 'true') {
+      setShowForensicPanel(true);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     const loadData = async () => {

@@ -12,7 +12,8 @@ import {
     ShieldQuestion,
     ShieldX,
     FileText,
-    Terminal
+    Terminal,
+    Shield
 } from 'lucide-react';
 import { LiveConsole } from '../components/LiveConsole';
 
@@ -112,6 +113,7 @@ export const AnalysisList: React.FC = () => {
                                     <th className="px-6 py-4 text-center">Риск</th>
                                     <th className="px-6 py-4 text-right">Вердикт</th>
                                     <th className="px-6 py-4 text-right">Дата</th>
+                                    <th className="px-6 py-4 text-right">Фор</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-white/5">
@@ -124,11 +126,12 @@ export const AnalysisList: React.FC = () => {
                                             <td className="px-6 py-4"><div className="h-6 w-12 bg-white/10 rounded mx-auto" /></td>
                                             <td className="px-6 py-4"><div className="h-6 w-20 bg-white/10 rounded ml-auto" /></td>
                                             <td className="px-6 py-4"><div className="h-4 w-24 bg-white/10 rounded ml-auto" /></td>
+                                            <td className="px-6 py-4"><div className="h-6 w-8 bg-white/10 rounded ml-auto" /></td>
                                         </tr>
                                     ))
                                 ) : analyses.length === 0 ? (
                                     <tr>
-                                        <td colSpan={6} className="px-6 py-12 text-center text-slate-500 font-medium">
+                                        <td colSpan={7} className="px-6 py-12 text-center text-slate-500 font-medium">
                                             Нет данных для при отображения
                                         </td>
                                     </tr>
@@ -169,6 +172,17 @@ export const AnalysisList: React.FC = () => {
                                             </td>
                                             <td className="px-6 py-4 text-right text-xs font-mono text-slate-500">
                                                 {new Date(item.created_at).toLocaleString('ru-RU')}
+                                            </td>
+                                            <td className="px-6 py-4 text-right">
+                                                <button
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        navigate(`/analysis/${item.id}?forensic=true`);
+                                                    }}
+                                                    className="px-2 py-1 text-xs bg-cyan-500/10 text-cyan-400 hover:bg-cyan-500/20 rounded border border-cyan-500/20"
+                                                >
+                                                    🔍
+                                                </button>
                                             </td>
                                         </tr>
                                     ))
