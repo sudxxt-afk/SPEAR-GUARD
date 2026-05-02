@@ -90,6 +90,10 @@ Thumbs.db
 *.tmp
 *.temp
 
+# Markdown
+*.md
+!README.md
+
 # Machine Learning Models
 *.pkl
 *.h5
